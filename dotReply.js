@@ -1,9 +1,9 @@
-module.exports = (client) => {
-  const roles = {
-    "1501984363536060437": "نورتي السيرفر يا ملكه 💗.",
-    "1501984361258684416": "نورت السيرفر يالشيخ💗."
-  };
+const roles = {
+  "1501984363536060437": "نورتي السيرفر يا ملكه 💗.",
+  "1501984361258684416": "نورت السيرفر يالشيخ💗."
+};
 
+export default function registerDotReply(client) {
   client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
     if (message.content.trim() !== ".") return;
@@ -22,4 +22,4 @@ module.exports = (client) => {
       message.reply(replies.join("\n"));
     }
   });
-};
+}
