@@ -3279,6 +3279,7 @@ setInterval(() => {
 import play from 'play-dl';
 
 
-
+import registerDotReply from './dotReply.js';
+registerDotReply(client);
 
 client.login(TOKEN);
