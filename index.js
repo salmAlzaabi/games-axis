@@ -438,7 +438,7 @@ const PUBLIC_CMDS = new Set([
   'العاب','games','الالعاب',
 ]);
 
-const AUTHORIZED_ROLE_ID = '1518979586510028904';
+const AUTHORIZED_ROLE_ID = '1502059565171216404';
 
 
 const COLORS = {
@@ -2692,19 +2692,15 @@ client.on('messageCreate', async message => {
     return;
   }
 
-  // نقطه (point message detector)
-  if (content.trim() === 'نقطه' || content.trim() === 'نقطة') {
-    const userId = message.author.id;
-    if (userId === '1226561156907401248') {
-      await message.reply('هلا يالأميرة 💅').catch(() => {});
-    } else if (userId === OWNER_ID) {
-      await message.reply('مياو').catch(() => {});
-    } else {
-      await message.reply(`**__مـرحـبـآ عـزيـزي الـعـضـو نـورت الـشـات 💫 .~ / __<@${userId}>**`).catch(() => {});
-    }
-    return;
-  }
+if (userId === '1226561156907401248') {
+  await message.reply('هلا يالأميرة 💅').catch(() => {});
+} else if (userId === OWNER_ID) {
+  await message.reply('**__مـرحـبـآ عـزيـزي الاونر نـورت سيرفرك 💫 .~__**').catch(() => {});
+} else {
+  await message.reply(`**__مـرحـبـآ عـزيـزي الـعـضـو نـورت الـشـات 💫 .~ / __<@${userId}>**`).catch(() => {});
+}
 
+  
   // -ش (شغّل موسيقى من يوتيوب)
   if (content.startsWith('-ش ') || content === '-ش') {
     const query = content.slice(3).trim();
