@@ -1211,7 +1211,7 @@ const cmdاعكس = {
       const winner = collected.first().author;
       ensureUser(winner.id, message.guild.id, winner.username);
       recordGameResult(winner.id, message.guild.id, 'اعكس', 'win', 1);
-      await message.channel.send({ embeds: [new EmbedBuilder().setTitle('🎉 صحيح!').setColor(0x7D0C22).setDescription(`**<@${winner.id}> فاز!**\n✅ الجواب: **${word}**\n💰 **+1 نقطة**`)] });
+      await message.channel.send({ embeds: [new EmbedBuilder().setTitle('🎉 صحيح!').setColor(0x7D0C22).setDescription(`**<@${winner.id}> فاز!**\n✅ الجواب: **${word}**\n **+1 نقطة**`)] });
     } catch {
       await message.channel.send({ embeds: [new EmbedBuilder().setTitle('⏰ انتهى الوقت!').setColor(0x7D0C22).setDescription(`الكلمة الصحيحة كانت: **${word}**`)] });
     }
@@ -1330,7 +1330,7 @@ const cmdتحويل = {
     ensureUser(target.id, message.guild.id, target.username);
     addPoints(message.author.id, message.guild.id, -amount, `تحويل لـ ${target.username}`);
     addPoints(target.id, message.guild.id, amount, `تحويل من ${message.author.username}`);
-    await message.channel.send({ embeds: [makeEmbed({ title: '💸 تم التحويل!', color: COLORS.success, fields: [{ name: '📤 من', value: `<@${message.author.id}>`, inline: true }, { name: '📥 إلى', value: `<@${target.id}>`, inline: true }, { name: '💰 المبلغ', value: `**${amount.toLocaleString()}** نقطة`, inline: true }, { name: '💼 رصيدك المتبقي', value: `${(sender.points - amount).toLocaleString()} نقطة`, inline: false }], timestamp: true })] });
+    await message.channel.send({ embeds: [makeEmbed({ title: '💸 تم التحويل!', color: COLORS.success, fields: [{ name: '📤 من', value: `<@${message.author.id}>`, inline: true }, { name: '📥 إلى', value: `<@${target.id}>`, inline: true }, { name: ' المبلغ', value: `**${amount.toLocaleString()}** نقطة`, inline: true }, { name: '💼 رصيدك المتبقي', value: `${(sender.points - amount).toLocaleString()} نقطة`, inline: false }], timestamp: true })] });
   }
 };
 
@@ -1415,7 +1415,7 @@ async function rpsRunGame(channel, game, channelId) {
   if (remaining.length === 1) {
     const winner = remaining[0];
     recordGameResult(winner.id, channel.guild.id, 'حجرة ورقة مقص', 'win', 1);
-    await channel.send({ embeds: [new EmbedBuilder().setColor(0x7D0C22).setTitle('🏆 الفائز!').setDescription(`## 🎉 <@${winner.id}>\n**${winner.username}** فاز بلعبة حجرة ورقة مقص!\n💰 **+1 نقطة**`).setFooter({ text: 'مبروك! 🎊' })] });
+    await channel.send({ embeds: [new EmbedBuilder().setColor(0x7D0C22).setTitle('🏆 الفائز!').setDescription(`## 🎉 <@${winner.id}>\n**${winner.username}** فاز بلعبة حجرة ورقة مقص!\n **+1 نقطة**`).setFooter({ text: 'مبروك! 🎊' })] });
   }
 }
 const cmdحجرة = {
@@ -1530,7 +1530,7 @@ async function روليتSpinAndReveal(channel, players, winnerIdx) {
 async function روليتSendWinnerEmbed(channel, guild, winner) {
   let avatarUrl = null;
   try { const member = await guild.members.fetch(winner.id); avatarUrl = member.user.displayAvatarURL({ extension: 'png', size: 256, forceStatic: true }); } catch { /* ignored */ }
-  const embed = new EmbedBuilder().setTitle('🏆 الفائز!').setColor(0x7D0C22).setDescription(`## 🎉 <@${winner.id}>\n**${winner.username}** فاز بلعبة الروليت!\n\n💰 **+3 نقاط**`).setFooter({ text: 'مبروك للفائز! 🎊' });
+  const embed = new EmbedBuilder().setTitle('🏆 الفائز!').setColor(0x7D0C22).setDescription(`## 🎉 <@${winner.id}>\n**${winner.username}** فاز بلعبة الروليت!\n\n **+3 نقاط**`).setFooter({ text: 'مبروك للفائز! 🎊' });
   if (avatarUrl) embed.setThumbnail(avatarUrl);
   await channel.send({ content: '@here', embeds: [embed] });
 }
@@ -2431,7 +2431,7 @@ async function غميضةEndGame(channel, game, channelId) {
       const winEmbed = new EmbedBuilder()
         .setColor(0x7D0C22)
         .setTitle('🏆 الفائز!')
-        .setDescription(`## 🎉 <@${winnerId}>\n**${winner.username}** فاز بلعبة الغميضة!\n\n💰 **+3 نقاط** 🏅`)
+        .setDescription(`## 🎉 <@${winnerId}>\n**${winner.username}** فاز بلعبة الغميضة!\n\n **+3 نقاط** 🏅`)
         .setFooter({ text: 'مبروك للفائز! 🎊' });
       if (avatarUrl) winEmbed.setThumbnail(avatarUrl);
       await channel.send({ content: '@here', embeds: [winEmbed] });
@@ -2525,7 +2525,7 @@ const cmdنقاطي = {
     const winRate = data.games_played > 0 ? ((data.wins / data.games_played) * 100).toFixed(1) : '0.0';
     await message.channel.send({
       embeds: [makeEmbed({
-        title: `💰 نقاط ${target.username}`,
+        title: ` نقاط ${target.username}`,
         color: COLORS.gold,
         thumbnail: target.displayAvatarURL({ dynamic: true }),
         fields: [
