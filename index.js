@@ -311,7 +311,7 @@ function buildTicketPanel() {
   const embed = new EmbedBuilder()
     .setColor(0x7D0C22)
     .setTitle('Ticket System')
-    .setDescription('Choose a ticket type below to open a request and get support from the staff team.')
+    .setDescription('**Choose a ticket type below to open a request and get support from the staff team.**')
     .setImage('attachment://axis.png');
 
   const select = new StringSelectMenuBuilder()
