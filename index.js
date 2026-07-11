@@ -1531,15 +1531,7 @@ function روليتBuildJoinRow() {
 }
 function روليتBuildLobbyEmbed(game, endTs) {
   const playerList = game.players.length > 0 ? game.players.map((p, i) => `\`${i + 1}\` ${p.username}`).join('\n') : '> لا يوجد لاعبون بعد';
-  return new EmbedBuilder()
-    .setTitle('🎡 روليت')
-    .setColor(0x7D0C22)
-    .addFields(
-      { name: '👥 اللاعبون', value: `${game.players.length}/20`, inline: true },
-      { name: '⏱ البداية', value: `<t:${endTs}:R>`, inline: true },
-      { name: '📋 المشاركون', value: playerList },
-    )
-    .setFooter({ text: 'اضغط ✚ للانضمام — يحتاج لاعبان على الأقل' });
+  return new EmbedBuilder().setTitle('🎡 روليت — انتظار اللاعبين').setColor(0x7D0C22).setDescription(`**👥 اللاعبون: ${game.players.length}/20**\n**⏱ تبدأ <t:${endTs}:R>**\n\n${playerList}`).setFooter({ text: 'اضغط ✚ للانضمام — يحتاج لاعبان على الأقل' });
 }
 async function روليتSpinAndReveal(channel, players, winnerIdx) {
   let gifBuf, stoppedBuf, gifDuration;
@@ -1552,7 +1544,7 @@ async function روليتSpinAndReveal(channel, players, winnerIdx) {
 async function روليتSendWinnerEmbed(channel, guild, winner) {
   let avatarUrl = null;
   try { const member = await guild.members.fetch(winner.id); avatarUrl = member.user.displayAvatarURL({ extension: 'png', size: 256, forceStatic: true }); } catch { /* ignored */ }
-  const embed = new EmbedBuilder().setTitle('🏆 الفائز!').setColor(0x7D0C22).addFields({ name: '🎉 الفائز', value: `<@${winner.id}>`, inline: true }, { name: '💰 الجائزة', value: '+3 نقاط', inline: true }).setFooter({ text: 'مبروك للفائز! 🎊' });
+  const embed = new EmbedBuilder().setTitle('🏆 الفائز!').setColor(0x7D0C22).setDescription(`## 🎉 <@${winner.id}>\n**${winner.username}** فاز بلعبة الروليت!\n\n💰 **+3 نقاط**`).setFooter({ text: 'مبروك للفائز! 🎊' });
   if (avatarUrl) embed.setThumbnail(avatarUrl);
   await channel.send({ content: '@here', embeds: [embed] });
 }
