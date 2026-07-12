@@ -3322,4 +3322,7 @@ import play from 'play-dl';
 import registerDotReply from './dotReply.js';
 registerDotReply(client);
 
+import registerEmbedCommand from './embedCommand.js';
+registerEmbedCommand(client);
+
 client.login(TOKEN);
