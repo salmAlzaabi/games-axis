@@ -1,49 +1,39 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 
 const OWNER_ID = '1195827812565798953';
 const AUTHORIZED_ROLE_ID = '1518979586510028904';
-
-const embedCommandData = new SlashCommandBuilder()
-  .setName('embed')
-  .setDescription('أرسل إمبد مخصص بعنوان ووصف وصور')
-  .addChannelOption(o => o.setName('channel').setDescription('القناة اللي ينرسل فيها الإمبد').setRequired(true))
-  .addStringOption(o => o.setName('title').setDescription('عنوان الإمبد (اختياري)').setRequired(false))
-  .addStringOption(o => o.setName('description').setDescription('وصف الإمبد (اختياري)').setRequired(false))
-  .addAttachmentOption(o => o.setName('image1').setDescription('صورة أولى (اختياري)').setRequired(false))
-  .addAttachmentOption(o => o.setName('image2').setDescription('صورة ثانية (اختياري)').setRequired(false))
-  .addAttachmentOption(o => o.setName('image3').setDescription('صورة ثالثة (اختياري)').setRequired(false))
-  .toJSON();
+const PREFIX = '-';
 
 export default function registerEmbedCommand(client) {
-  // يسجل أمر /embed لحاله بدون ما يأثر على باقي أوامر السلاش المسجلة
-  client.once('clientReady', async () => {
-    try {
-      await client.application.commands.create(embedCommandData);
-      console.log('✅ /embed command registered');
-    } catch (e) {
-      console.error('❌ /embed command registration failed:', e.message);
+  client.on('messageCreate', async message => {
+    if (message.author.bot) return;
+    if (!message.content.startsWith(`${PREFIX}embed`)) return;
+
+    const memberHasAuth = message.member?.roles?.cache?.has(AUTHORIZED_ROLE_ID) ?? false;
+    const isOwner = message.author.id === OWNER_ID;
+    if (!isOwner && !memberHasAuth) return message.react('❌').catch(() => {});
+
+    // مثال: -embed #القناة | العنوان | الوصف   (والصور ترفقها مع نفس الرسالة، لين 3 صور)
+    const rest = message.content.slice(`${PREFIX}embed`.length).trim();
+
+    const channelMatch = rest.match(/<#(\d+)>/);
+    if (!channelMatch) {
+      return message.reply('❌ لازم تحدد القناة أول شي، مثال:\n`-embed #القناة | العنوان | الوصف`').catch(() => {});
     }
-  });
-
-  client.on('interactionCreate', async interaction => {
-    if (!interaction.isChatInputCommand() || interaction.commandName !== 'embed') return;
-
-    const memberHasAuth = interaction.member?.roles?.cache?.has(AUTHORIZED_ROLE_ID) ?? false;
-    const isOwner = interaction.user.id === OWNER_ID;
-    if (!isOwner && !memberHasAuth) {
-      return interaction.reply({ content: '❌ ليس لديك صلاحية.', ephemeral: true });
+    const targetChannel = message.guild.channels.cache.get(channelMatch[1]);
+    if (!targetChannel?.isTextBased?.()) {
+      return message.reply('❌ القناة اللي حددتها مو نصية أو مو موجودة.').catch(() => {});
     }
 
-    const targetChannel = interaction.options.getChannel('channel');
-    const title = interaction.options.getString('title');
-    const description = interaction.options.getString('description');
-    const images = [1, 2, 3].map(n => interaction.options.getAttachment(`image${n}`)).filter(Boolean);
+    const afterChannel = rest.replace(channelMatch[0], '').trim().replace(/^\|/, '').trim();
+    const parts = afterChannel.split('|').map(p => p.trim()).filter(Boolean);
+    const title = parts[0] || null;
+    const description = parts[1] || null;
+
+    const images = [...message.attachments.values()].slice(0, 3);
 
     if (!title && !description && images.length === 0) {
-      return interaction.reply({ content: '❌ لازم تحط عنوان أو وصف أو صورة وحدة على الأقل.', ephemeral: true });
-    }
-    if (!targetChannel?.isTextBased?.()) {
-      return interaction.reply({ content: '❌ لازم تختار قناة نصية صحيحة.', ephemeral: true });
+      return message.reply('❌ لازم تحط عنوان أو وصف أو صورة وحدة على الأقل.').catch(() => {});
     }
 
     const mainEmbed = new EmbedBuilder().setColor(0x7D0C22);
@@ -55,9 +45,9 @@ export default function registerEmbedCommand(client) {
 
     try {
       await targetChannel.send({ embeds: [mainEmbed, ...extraEmbeds] });
-      return interaction.reply({ content: `✅ تم إرسال الإمبد في <#${targetChannel.id}>`, ephemeral: true });
+      await message.reply(`✅ تم إرسال الإمبد في <#${targetChannel.id}>`).catch(() => {});
     } catch (e) {
-      return interaction.reply({ content: `❌ فشل الإرسال: ${e.message}`, ephemeral: true });
+      await message.reply(`❌ فشل الإرسال: ${e.message}`).catch(() => {});
     }
   });
 }
