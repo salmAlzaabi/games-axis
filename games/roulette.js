@@ -3,7 +3,8 @@ import { ensureUser, addPoints } from '../database.js';
 import { sleep } from '../utils.js';
 
 // روليت
-const روليتGames = new Map(), LOBBY_DURATION = 30_000;
+export const روليتGames = new Map();
+const LOBBY_DURATION = 30_000;
 function روليتBuildJoinRow() {
   return new ActionRowBuilder().addComponents(
     new ButtonBuilder().setCustomId('روليت_عشوائي').setLabel('✚  انضمام').setStyle(ButtonStyle.Success),
@@ -32,6 +33,7 @@ async function روليتSendWinnerEmbed(channel, guild, winner) {
 async function روليتRunGame(message, game, channelId, client) {
   const channel = message.channel;
   while (game.players.length > 1) {
+    if (game.cancelled) return;
     const chosenIdx = Math.floor(Math.random() * game.players.length);
     const chosen = game.players[chosenIdx];
     await channel.send(`**🎡 الجولة ${game.round} — اللاعبون:** ${game.players.map(p => `<@${p.id}>`).join(' ')}`);
