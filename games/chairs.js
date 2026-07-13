@@ -3,7 +3,7 @@ import { ensureUser, recordGameResult } from '../database.js';
 import { sleep } from '../utils.js';
 
 // كراسي
-const كراسيGames = new Map();
+export const كراسيGames = new Map();
 function كراسيLobbyEmbed(players, endTs) {
   const playerList = players.length > 0 ? players.map((p, i) => `\`${i + 1}\` ${p.username}`).join('\n') : '> لا يوجد لاعبون بعد';
   return new EmbedBuilder()
@@ -19,6 +19,7 @@ function كراسيLobbyEmbed(players, endTs) {
 async function كراسيRunGame(channel, game, channelId) {
   let remaining = [...game.players], round = 1;
   while (remaining.length > 1) {
+    if (game.cancelled) return;
     const chairs = remaining.length - 1;
     await channel.send(`**🪑 الجولة ${round} — الكراسي: ${chairs} | اللاعبون: ${remaining.length}\n🎵 الموسيقى بدأت...** ${remaining.map(p => `<@${p.id}>`).join(' ')}`);
     await sleep(Math.random() * 3000 + 2000);
