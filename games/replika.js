@@ -3,7 +3,7 @@ import { ensureUser, recordGameResult } from '../database.js';
 import { sleep } from '../utils.js';
 
 // ريبلكا
-const ريبلكاGames = new Map();
+export const ريبلكاGames = new Map();
 const REPLIKA_CATEGORIES = ['اسم','حيوان','نبات','دولة','مدينة','طعام','لون','مهنة','جماد','فاكهة'];
 const ARABIC_LETTERS = 'أبتثجحخدذرزسشصضطظعغفقكلمنهوي'.split('');
 function ريبلكاLobbyEmbed(players, endTs) {
@@ -46,9 +46,11 @@ async function ريبلكاValidateAnswer(category, letter, answer) {
 async function ريبلكاRunGame(channel, game, channelId) {
   const rounds = 5;
   for (let r = 1; r <= rounds; r++) {
+    if (game.cancelled) return;
     const category = REPLIKA_CATEGORIES[Math.floor(Math.random() * REPLIKA_CATEGORIES.length)];
     await channel.send(`**📖 الجولة ${r}/${rounds} — التصنيف: ${category}**`);
     for (const target of game.players) {
+      if (game.cancelled) return;
       const letter = ARABIC_LETTERS[Math.floor(Math.random() * ARABIC_LETTERS.length)];
       await channel.send(`<@${target.id}> **اكتب كلمة تبدأ بـ ${letter} من ${category}! (20 ثانية)**`);
       try {
