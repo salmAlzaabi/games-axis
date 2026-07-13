@@ -2,7 +2,7 @@ import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'disc
 import { ensureUser, recordGameResult } from '../database.js';
 import { sleep } from '../utils.js';
 
-const غميضةGames = new Map();
+export const غميضةGames = new Map();
 
 function buildغميضةHideGrid(squares, channelId) {
   const rows = [];
