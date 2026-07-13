@@ -3,7 +3,7 @@ import { ensureUser, recordGameResult } from '../database.js';
 import { sleep } from '../utils.js';
 
 // عجلة
-const عجلةGames = new Map();
+export const عجلةGames = new Map();
 const LOCATIONS = ['🏠 البيت','🏫 المدرسة','🏖️ الشاطئ','🌲 الغابة','🏔️ الجبل','🏙️ المدينة','🎭 المسرح','🏪 المتجر','🌊 البحر','🏜️ الصحراء'];
 function عجلةLobbyEmbed(players, endTs) {
   const playerList = players.length > 0 ? players.map((p, i) => `\`${i + 1}\` ${p.username}`).join('\n') : '> لا يوجد لاعبون بعد';
@@ -20,6 +20,7 @@ function عجلةLobbyEmbed(players, endTs) {
 async function عجلةRunGame(channel, game, channelId) {
   let remaining = [...game.players], round = 1;
   while (remaining.length > 1) {
+    if (game.cancelled) return;
     await channel.send(`**🎡 الجولة ${round} — العجلة تدور...**`);
     await sleep(2500);
     const target = remaining[Math.floor(Math.random() * remaining.length)];
