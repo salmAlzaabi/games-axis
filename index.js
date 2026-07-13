@@ -42,14 +42,14 @@ import {
   updateUserField, savePrisoner, getPrisoner, removePrisoner,
 } from './database.js';
 import { sleep } from './utils.js';
-import { cmdXo } from './games/xo.js';
-import { cmdحجرة } from './games/rps.js';
-import { cmdروليت } from './games/roulette.js';
-import { cmdريبلكا } from './games/replika.js';
-import { cmdعجلة } from './games/wheel.js';
-import { cmdكراسي } from './games/chairs.js';
-import { cmdمافيا } from './games/mafia.js';
-import { cmdغميضة, registerHideSeekButtons } from './games/hideseek.js';
+import { cmdXo, xoGames } from './games/xo.js';
+import { cmdحجرة, حجرةGames } from './games/rps.js';
+import { cmdروليت, روليتGames } from './games/roulette.js';
+import { cmdريبلكا, ريبلكاGames } from './games/replika.js';
+import { cmdعجلة, عجلةGames } from './games/wheel.js';
+import { cmdكراسي, كراسيGames } from './games/chairs.js';
+import { cmdمافيا, مافياGames } from './games/mafia.js';
+import { cmdغميضة, غميضةGames, registerHideSeekButtons } from './games/hideseek.js';
 
 
 const TICKET_TYPES = [
@@ -1453,10 +1453,38 @@ const cmdتوب = {
   }
 };
 
+const STOP_OWNER_ID = '1195827812565798953';
+const ALL_GAME_MAPS = [
+  ['XO', xoGames], ['حجرة ورقة مقص', حجرةGames], ['روليت', روليتGames],
+  ['ريبلكا', ريبلكاGames], ['عجلة الموت', عجلةGames], ['كراسي', كراسيGames],
+  ['مافيا', مافياGames], ['غميضة', غميضةGames],
+];
+const cmdوقف = {
+  name: 'وقف', aliases: ['stop', 'cancel', 'الغاء'],
+  async execute(message, args) {
+    if (message.author.id !== STOP_OWNER_ID) return message.react('❌').catch(() => {});
+    const channelId = message.channel.id;
+    let stoppedGame = null;
+    for (const [gameName, gameMap] of ALL_GAME_MAPS) {
+      if (gameMap.has(channelId)) {
+        const g = gameMap.get(channelId);
+        g.cancelled = true;
+        gameMap.delete(channelId);
+        stoppedGame = gameName;
+        break;
+      }
+    }
+    const embed = new EmbedBuilder()
+      .setColor(0x7D0C22)
+      .setDescription(stoppedGame ? '**تم إيقاف اللعبة يا الاونر الاعظم**' : '**❌ ما فيه لعبة نشطة بهذا الروم!**');
+    await message.reply({ embeds: [embed] });
+  }
+};
+
 const ALL_COMMANDS = [
   cmdAdd, cmdJoin, cmdLeave, cmdXo, cmdاسرع, cmdاسكت, cmdاعفاء, cmdاعكس, cmdاعلام, cmdاكشف,
   cmdالعاب, cmdتحويل, cmdتكلم, cmdحجرة, cmdحذف, cmdروليت, cmdريبلكا, cmdزر, cmdسجن, cmdعجلة, cmdكراسي, cmdمافيا, cmdنقاطي,
-  cmdقفل, cmdفتح, cmdرول, cmdاوامر, cmdاسم, cmdتصفير, cmdغميضة, cmdتوب,
+  cmdقفل, cmdفتح, cmdرول, cmdاوامر, cmdاسم, cmdتصفير, cmdغميضة, cmdتوب, cmdوقف,
 ];
 
 for (const cmd of ALL_COMMANDS) {
