@@ -3,7 +3,7 @@ import { ensureUser, recordGameResult } from '../database.js';
 import { sleep } from '../utils.js';
 
 // مافيا
-const مافياGames = new Map();
+export const مافياGames = new Map();
 function مافياLobbyEmbed(players, endTs) {
   const playerList = players.length > 0 ? players.map((p, i) => `\`${i + 1}\` ${p.nickname || p.username}`).join('\n') : '> لا يوجد لاعبون بعد';
   return new EmbedBuilder()
@@ -28,6 +28,7 @@ async function مافياRunGame(channel, game, channelId) {
   await channel.send(`**🌙 الليل بدأ... تم إرسال الأدوار في الرسائل الخاصة!\nالأدوار — مافيا: ${mafiaCount} | طبيب: 1 | مواطنين: ${total - mafiaCount - 1}**`);
   let round = 1;
   while (true) {
+    if (game.cancelled) return;
     const alive = players.filter(p => p.alive), mafias = alive.filter(p => p.role === 'مافيا'), citizens = alive.filter(p => p.role !== 'مافيا');
     if (mafias.length === 0) { مافياGames.delete(channelId); citizens.forEach(p => recordGameResult(p.id, channel.guild.id, 'مافيا', 'win', 1));
       return channel.send(`**🏆 المواطنون فازوا! تم القضاء على المافيا!\nالفائزون: ${citizens.map(p => `<@${p.id}>`).join(' ')}**`); }
