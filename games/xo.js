@@ -2,7 +2,7 @@ import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'disc
 import { ensureUser, recordGameResult } from '../database.js';
 import { sleep } from '../utils.js';
 
-const xoGames = new Map();
+export const xoGames = new Map();
 const XO_EMPTY = '⬜', XO_X = '❌', XO_O = '⭕';
 const XO_WIN_CONDS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 function xoCheckWin(board, mark) { return XO_WIN_CONDS.some(([a,b,c]) => board[a]===mark && board[b]===mark && board[c]===mark); }
@@ -70,6 +70,7 @@ async function xoPlayMatch(channel, p1, p2) {
 async function xoRunTournament(channel, game, channelId) {
   let remaining = [...game.players];
   while (remaining.length > 1) {
+    if (game.cancelled) return;
     const shuffled = remaining.sort(() => Math.random() - 0.5), nextRound = [];
     for (let i = 0; i < shuffled.length; i += 2) {
       const p1 = shuffled[i], p2 = shuffled[i + 1];
