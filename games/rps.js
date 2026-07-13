@@ -3,7 +3,7 @@ import { ensureUser, recordGameResult } from '../database.js';
 import { sleep } from '../utils.js';
 
 // حجرة
-const حجرةGames = new Map();
+export const حجرةGames = new Map();
 const RPS_CHOICES = { rock: '🪨 حجر', paper: '📄 ورقة', scissors: '✂️ مقص' };
 const RPS_BEATS = { rock: 'scissors', paper: 'rock', scissors: 'paper' };
 const RPS_EMOJI = { rock: '🪨', paper: '📄', scissors: '✂️' };
@@ -56,6 +56,7 @@ async function rpsPlayDuel(channel, p1, p2) {
 async function rpsRunGame(channel, game, channelId) {
   let remaining = [...game.players], roundNum = 1;
   while (remaining.length > 1) {
+    if (game.cancelled) return;
     const shuffled = [...remaining].sort(() => Math.random() - 0.5);
     await channel.send({ embeds: [new EmbedBuilder().setColor(0x7D0C22).setTitle(`🪨 الجولة ${roundNum}`).setDescription(`**المشاركون:**\n${shuffled.map(p => `<@${p.id}>`).join('  ')}` + (shuffled.length % 2 !== 0 ? `\n\n⚡ <@${shuffled[shuffled.length - 1].id}> تخطى مباشرة للجولة القادمة!` : ''))] });
     await sleep(1500);
