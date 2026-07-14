@@ -10,7 +10,7 @@ const cooldowns = new Map();
 const COOLDOWN_MS = 60_000;
 
 const tafshRoles = {
-  "1501984363536060437": {
+  "1373005291880316928": {
     question: "وش اسوي لك انتي بعد اقوم ارقص ؟",
     image: "https://cdn.discordapp.com/attachments/1520910367218208898/1526655732185960578/image.png?ex=6a57d072&is=6a567ef2&hm=7ad7c3bae12b3c95b05d715849e959e570fa93a0e10360e7476f0c9be073d898"
   },
@@ -44,7 +44,7 @@ export default function registerDotReply(client) {
 
     if (message.reference?.messageId && pendingTafsh.has(message.reference.messageId)) {
       const pending = pendingTafsh.get(message.reference.messageId);
-      if (pending.userId === message.author.id && message.content.trim() === "اي") {
+      if (pending.userId === message.author.id && message.content.includes("اي")) {
         pendingTafsh.delete(message.reference.messageId);
         message.reply(tafshRoles[pending.roleId].image);
       }
