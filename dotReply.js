@@ -21,9 +21,9 @@ const tafshRoles = {
 };
 
 const lastTafshUse = {};
-const TAFSH_COOLDOWN_MS = 120_000;
+const TAFSH_COOLDOWN_MS = 60_000;
 const pendingTafsh = new Map();
-const TAFSH_ANSWER_WINDOW_MS = 120_000;
+const TAFSH_ANSWER_WINDOW_MS = 60_000;
 
 export default function registerDotReply(client) {
   client.on("messageCreate", async (message) => {
