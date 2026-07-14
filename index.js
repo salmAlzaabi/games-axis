@@ -414,7 +414,7 @@ function drawSidePanel(ctx, W, H, cx, R, players, winnerIdx, isFinished) {
   ctx.restore();
 }
 
-async function generateSpinningWheelGif(players, winnerIdx) {
+export async function generateSpinningWheelGif(players, winnerIdx) {
   if (!canvasAvailable) return null;
   const W = 720, H = 620, cx = 300, cy = H / 2, R = 260, n = players.length;
   const sliceAngle = (2 * Math.PI) / n;
