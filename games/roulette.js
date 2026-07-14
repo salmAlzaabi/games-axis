@@ -1,6 +1,7 @@
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
 import { ensureUser, addPoints } from '../database.js';
 import { sleep } from '../utils.js';
+import { generateSpinningWheelGif } from '../index.js';
 
 // روليت
 export const روليتGames = new Map();
