@@ -20,7 +20,7 @@ const tafshRoles = {
   }
 };
 
-let lastTafshUse = 0;
+const lastTafshUse = {};
 const TAFSH_COOLDOWN_MS = 120_000;
 const pendingTafsh = new Map();
 
@@ -32,10 +32,10 @@ export default function registerDotReply(client) {
 
     if (message.content.trim() === "طفش") {
       const now = Date.now();
-      if (now - lastTafshUse < TAFSH_COOLDOWN_MS) return;
       const roleId = Object.keys(tafshRoles).find((id) => member.roles.cache.has(id));
       if (!roleId) return;
-      lastTafshUse = now;
+      if (now - (lastTafshUse[roleId] || 0) < TAFSH_COOLDOWN_MS) return;
+      lastTafshUse[roleId] = now;
       const sent = await message.reply(tafshRoles[roleId].question);
       pendingTafsh.set(sent.id, { userId: message.author.id, roleId });
       setTimeout(() => pendingTafsh.delete(sent.id), 5 * 60_000);
