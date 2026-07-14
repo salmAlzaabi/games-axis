@@ -10,7 +10,7 @@ const cooldowns = new Map();
 const COOLDOWN_MS = 60_000;
 
 const tafshRoles = {
-  "1373005291880316928": {
+  "1501984363536060437": {
     question: "وش اسوي لك انتي بعد اقوم ارقص ؟",
     image: "https://cdn.discordapp.com/attachments/1520910367218208898/1526655732185960578/image.png?ex=6a57d072&is=6a567ef2&hm=7ad7c3bae12b3c95b05d715849e959e570fa93a0e10360e7476f0c9be073d898"
   },
@@ -60,6 +60,7 @@ export default function registerDotReply(client) {
       replies.push(users[message.author.id]);
     }
     for (const roleId in roles) {
+      if (roleId === "1501984361258684416" && message.author.id === "1195827812565798953") continue;
       if (member.roles.cache.has(roleId)) {
         replies.push(roles[roleId]);
       }
