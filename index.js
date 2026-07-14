@@ -2110,4 +2110,25 @@ registerEmbedCommand(client);
 
 registerHideSeekButtons(client);
 
+
+
+
+client.on('messageCreate', async (message) => {
+  // 1. تأكد من استبدال هذا الرقم بـ ID حسابك الشخصي في ديسكورد لضمان الأمان
+  if (message.content === '!backup' && message.author.id === '1195827812565798953') {
+    try {
+      // 2. حدد مسار الملف الفعلي للداتا (غالباً يكون داخل مجلد الـ volume مثل الأكواد أدناه)
+      // إذا كان الملف مخزناً داخل مجلد باسم games-axis-volume
+      const filePath = './games-axis-volume/database.json'; 
+      
+      await message.reply({
+        content: 'تفضل، هذا ملف الداتا الخاص بك لحفظه على الجهاز:',
+        files: [filePath]
+      });
+    } catch (error) {
+      message.reply('حدث خطأ أثناء جلب الملف، تأكد من مسار الملف واسمه الصحيح: ' + error.message);
+    }
+  }
+});
+
 client.login(TOKEN);
